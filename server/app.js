@@ -19,8 +19,8 @@ app.use(morgan('dev'));
 app.use(parser.json());
 
 // Set up our routes
-app.use("/classes", router);
-
+app.use("/", router);
+app.use('/user', router);
 // Serve the client files
 app.use(express.static(__dirname + "/../client"));
 
@@ -31,3 +31,16 @@ if (!module.parent) {
 }
 
 // when we received get request sen
+exports.headers = headers = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "content-type, accept",
+  "access-control-max-age": 10, // Seconds.
+  'Content-Type': "application/jsonp"
+};
+
+//DELETE THIS
+//app.get('/', function(req, res) {
+//  var blocks = ['Fixed', 'Movable', 'Rotating'];
+//  response.send(blocks);
+//});

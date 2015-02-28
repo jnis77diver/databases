@@ -5,25 +5,34 @@ var mysql = require('mysql');
 // and to the database "chat".
 
 
-// var mysql = require('mysql');
 
-// var connection = mysql.createConnection(
-//     {
-//       host     : '127.0.0.1',
-//       port     : 3306,
-//       user     : 'root',
-//       password : 'Tofu2009',
-//       database : 'chat'
-//     }
-// );
+
+var connection = mysql.createConnection(
+     {
+       host     : '127.0.0.1',
+       port     : 3306,
+       user     : 'root',
+       password : 'Tofu2009',
+       database : 'chat'
+     }
+);
+
+connection.connect();
+
+module.exports = connection;
+
 // console.log(connection);
 
-// connection.connect();
+//connection.connect();
 
-// var queryString = 'SELECT * FROM messages';
+//var queryString = 'INSERT INTO user (username) values ("Ko")';
+//
+//connection.query(queryString, function(err, rows, fields) {
+//  if (err)  {
+//     console.log(err.code);  // ER_DUP_ENTRY
+//  }
+//  console.log('Post Titles: '+ JSON.stringify(fields) );
+//});
+//connection.end();
 
-// connection.query(queryString, function(err, rows, fields) {
-//     if (err) throw err;
-//     console.log('Post Titles: '+ JSON.stringify(fields) );
-// });
-// connection.end();
+//module.exports = db;
