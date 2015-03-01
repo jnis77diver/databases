@@ -10,6 +10,7 @@ $(function() {
     username: username,
     roomname: 'lobby',
     lastMessageId: 0,
+    createdAt: new Date(),
     friends: {},
 
     init: function() {
@@ -65,16 +66,16 @@ $(function() {
         //data: { order: '-createdAt'},
         success: function(data) {
           console.log('chatterbox: Messages fetched');
-
+          console.log(data);  //[{id:, username:, text:, roomname:}] should be data.results
           // Don't bother if we have nothing to work with
           if (!data.results || !data.results.length) { return; }
 
           // Get the last message
-          var mostRecentMessage = data.results[data.results.length-1];
+          var mostRecentMessage = data.results[0];
           var displayedRoom = $('.chat span').first().data('roomname');
           app.stopSpinner();
           // Only bother updating the DOM if we have a new message
-          if (mostRecentMessage.objectId !== app.lastMessageId || app.roomname !== displayedRoom) {
+          if (mostRecentMessage.createdAt !== app.createdAt || app.roomname !== displayedRoom) {
             // Update the UI with the fetched rooms
             app.populateRooms(data.results);
 
@@ -82,7 +83,7 @@ $(function() {
             app.populateMessages(data.results, animate);
 
             // Store the ID of the most recent message
-            app.lastMessageId = mostRecentMessage.objectId;
+            app.createdAt = mostRecentMessage.createdAt;
           }
         },
         error: function(data) {
