@@ -40,11 +40,6 @@ module.exports = {
 };
 
 
-// client user is gonna choose from drop down for room name
-// then post request to  /roomFilter, server looks data which contains roomname
-// whith that data we construct sql and get all the messages in the roomname
-// response will be to send the html that contains all the messages.
-// that will replace the chat box.
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,6 +47,11 @@ module.exports = {
 /*
 var models = require('../models');
 var bluebird = require('bluebird');
+var db = require('../db');
+
+var Message = db.Message;
+var User = db.User;
+//var Message = require('../sequelizeIt')
 
 var userFields = ['username'];
 var messageFields = ['message', 'username', 'roomname'];
@@ -67,32 +67,36 @@ module.exports = {
     },
     post: function (req, res) {  // a function which handles posting a message to the database
       console.log(req.body);
-      var params = {
-        text: req.body[text],
-        username: req.body[username],
-        roomname: req.body[roomname]
+      User.findOrCreate({username: req.body[username]})
+        .complete(function(err, user){
+          var params = {
+            text: req.body[text],
+            userid: user.id,
+            roomname: req.body[roomname]
+          }
+          Message.create(params)
+            .complete(function(err, results) {
+              res.sendStatus(201);
+            });
+        });
       }
-      models.messages.post(params, function(err, results) {
-
-      });
-
-    }
   },
 
   users: {
     // Ditto as above
-    get: function (req, res) {
-      console.log("got a GET request");
-      models.users.get(function(err, results) {
-        //TODO handle errors
-        res.json(results);
-      });
+    get: function (req, res) {   // a function which handles a get request for all messages
+      User.findAll()  //by definition is an outer join
+        .complete(function(err, results) {
+          res.json(results);
+        });
     },
-    post: function (req, res) {
-      var param = [ req.body[username] ];
-      models.users.post(params, function(err, results) {
-        res.json(results);
-      });
+    post: function (req, res) {  // a function which handles posting a message to the database
+      console.log(req.body);
+      User.create({username: req.body[username]})
+        .complete(function(err, user) {
+          res.sendStatus(201);
+        });
     }
   }
+}
 */
