@@ -1,5 +1,5 @@
 var db = require('../db');
-
+var Promise = require('bluebird');
 
 module.exports = {
   messages: {
@@ -13,14 +13,31 @@ module.exports = {
         callback(err, results);
       });
     },
+
+
     post: function (params, callback) {  // a function which can be used to insert a message into the database
-      var queryString = "INSERT INTO messages (userid, text, roomname) \
-                         values ((SELECT id FROM user WHERE username = ? LIMIT 1), ?, ?)";
-      db.query(queryString, params, function(err, results) {
-        console.log("err ", err);
-        console.log("results from DBquery ", results);
-        callback(err, results);
-      });
+      var queryString = "INSERT INTO user (username) values (?)";
+      var queryString2 = "INSERT INTO messages (userid, text, roomname) \
+                          values ((SELECT id FROM user WHERE username = ? LIMIT 1), ?, ?)";
+      var queryString3 = "INSERT INTO roomname (roomname) values (?)";
+
+
+      var databaseQuery = function(query, params, callback) {
+        return new Promise(function(resolve, reject) {
+          db.query(query, params, function(err, results) {
+          });
+        });
+      };
+
+      databaseQuery(queryString, params).
+        then(databaseQuery(queryString2, params, function(err, results) {
+          callback(err, results);
+        })).
+         then(databaseQuery(queryString3, params[2])).
+        catch(function(err) {
+          console.log('error in creating user and message');
+        });
+
     }
   },
   users: {
@@ -37,6 +54,7 @@ module.exports = {
         callback(results);
       });
     }
+
   }
 };
 

@@ -8,18 +8,15 @@ module.exports = {
       console.log("got a GET request");
       models.messages.get(function(err, results) {
         console.log("controller error", err);
-        console.log('controller results', results);
         res.json({"results": results});
       });
       //res.writeHead(200, headers);
       //res.end();
     },
     post: function (req, res) {  // a function which handles posting a message to the database
-      console.log(req.body);
       var params = [ req.body['username'], req.body['text'], req.body['roomname'] ];
-      console.log("params are ", params);
       models.messages.post(params, function(err, results) {
-
+        res.json(results);
       });
 
     }
@@ -28,7 +25,6 @@ module.exports = {
   users: {
     // Ditto as above
     get: function (req, res) {
-      console.log("got a GET request");
       models.users.get(function(err, results) {
         //TODO handle errors
         res.json(results);
@@ -41,17 +37,6 @@ module.exports = {
       });
     }
   }
-
-  // url request by client.
-  // If client request http:local:3030/roomFilter
-  // $.ajax(/roomFilter, {})
-  // http:localhost:3030/messages?roomname=lobby
-  //roomFilter: {
-  //  post: function (req, res) {
-  //    req.data
-  //  }
-  //}
-
 };
 
 
